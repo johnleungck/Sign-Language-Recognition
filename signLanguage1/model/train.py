@@ -94,7 +94,7 @@ test_loader = DataLoader(dataset=dataset_test, batch_size=batch_size_test)
 
 torch.manual_seed(0)
 learning_rate = 0.001
-num_epochs = 20
+num_epochs = 10
 model = Net()
 optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate, momentum=0.2, weight_decay=0.002)
 log_interval = 1445

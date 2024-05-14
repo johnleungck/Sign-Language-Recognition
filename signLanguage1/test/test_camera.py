@@ -1,6 +1,7 @@
 import numpy as np
 import cv2
 import torch
+import time
 
 from network import Net
 
@@ -21,12 +22,21 @@ signs = {'0': 'A', '1': 'B', '2': 'C', '3': 'D', '4': 'E', '5': 'F',
             '13': 'N', '14': 'O', '15': 'P', '16': 'Q', '17': 'R', '18': 'S',
             '19': 'T', '20': 'U', '21': 'V', '22': 'W', '23': 'X', '24': 'Y'}
 
+prev_frame_time = 0
+new_frame_time = 0
+
 while True:
     ret, frame = cap.read()
     frame = cv2.flip(frame, 1)
     height, width, _ = frame.shape
     top_left = (width//2 - 115, height//2 - 115)
     bottom_right = (width//2 + 115, height//2 + 115)
+
+    new_frame_time = time.time()
+    fps = int(1/(new_frame_time-prev_frame_time))
+    prev_frame_time = new_frame_time
+    cv2.putText(frame, f'FPS: {int(fps)}', (width-150, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+
     img = frame[top_left[1]:bottom_right[1], top_left[0]:bottom_right[0]]
 
     res = cv2.resize(img, dsize=(28, 28), interpolation = cv2.INTER_CUBIC)

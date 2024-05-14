@@ -1,5 +1,5 @@
 import pickle
-
+import time
 import cv2
 import mediapipe as mp
 import numpy as np
@@ -16,8 +16,11 @@ mp_drawing_styles = mp.solutions.drawing_styles
 hands = mp_hands.Hands(static_image_mode=True, min_detection_confidence=0.3)
 
 labels_dict = {0: 'Rock', 1: 'Paper', 2: 'Scissors'}
-while True:
 
+prev_frame_time = 0
+new_frame_time = 0
+
+while True:
     data_aux = []
     x_ = []
     y_ = []
@@ -28,7 +31,13 @@ while True:
 
     frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
+    new_frame_time = time.time()
+    fps = int(1/(new_frame_time-prev_frame_time))
+    prev_frame_time = new_frame_time
+    cv2.putText(frame, f'FPS: {int(fps)}', (W-150, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+
     results = hands.process(frame_rgb)
+
     if results.multi_hand_landmarks:
         for hand_landmarks in results.multi_hand_landmarks:
             mp_drawing.draw_landmarks(
@@ -58,7 +67,6 @@ while True:
         x2 = int(max(x_) * W) - 10
         y2 = int(max(y_) * H) - 10
 
-        print(len(data_aux))
         data_aux = data_aux[0:42]
 
         prediction = model.predict([np.asarray(data_aux)])
