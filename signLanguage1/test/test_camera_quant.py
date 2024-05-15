@@ -49,8 +49,9 @@ cap.set(4, 480)
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model = QuantNet().to(device)
+
 checkpoint = r"weights/QuantModel.pt"
-checkpoints = torch.load(checkpoint)
+checkpoints = torch.load(checkpoint, map_location=torch.device('cpu'))
 model.load_state_dict(checkpoints)
 model.eval()
 
