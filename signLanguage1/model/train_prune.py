@@ -111,6 +111,47 @@ prune.global_unstructured(
     amount=0.2,
 )
 
+print(
+    "Sparsity in conv1.weight: {:.2f}%".format(
+        100. * float(torch.sum(model.conv1.weight == 0))
+        / float(model.conv1.weight.nelement())
+    )
+)
+print(
+    "Sparsity in conv2.weight: {:.2f}%".format(
+        100. * float(torch.sum(model.conv2.weight == 0))
+        / float(model.conv2.weight.nelement())
+    )
+)
+print(
+    "Sparsity in fc1.weight: {:.2f}%".format(
+        100. * float(torch.sum(model.fc1.weight == 0))
+        / float(model.fc1.weight.nelement())
+    )
+)
+print(
+    "Sparsity in fc2.weight: {:.2f}%".format(
+        100. * float(torch.sum(model.fc2.weight == 0))
+        / float(model.fc2.weight.nelement())
+    )
+)
+print(
+    "Global sparsity: {:.2f}%".format(
+        100. * float(
+            torch.sum(model.conv1.weight == 0)
+            + torch.sum(model.conv2.weight == 0)
+            + torch.sum(model.fc1.weight == 0)
+            + torch.sum(model.fc2.weight == 0)
+        )
+        / float(
+            model.conv1.weight.nelement()
+            + model.conv2.weight.nelement()
+            + model.fc1.weight.nelement()
+            + model.fc2.weight.nelement()
+        )
+    )
+)
+
 optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate, momentum=0.2, weight_decay=0.002)
 log_interval = 1445
 
